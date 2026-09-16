@@ -2,6 +2,7 @@ package com.thomas.dungeoncrawler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class GameEngine {
 
@@ -9,8 +10,14 @@ public class GameEngine {
     private final Player player;
     private final List<Enemy> enemies;
     private final CombatSystem combatSystem;
+    private final Random random;
+    private CombatResult lastCombatResult;
+
+    private GameState gameState;
 
     public GameEngine() {
+
+        this.random = new Random();
 
         DungeonGenerator generator = new DungeonGenerator();
         this.dungeon = new Dungeon(20, 8, generator);
@@ -18,13 +25,12 @@ public class GameEngine {
         this.player = createPlayer(generator);
         this.enemies = createEnemies(generator);
         this.combatSystem = new CombatSystem();
+        this.gameState = GameState.PLAYING;
+        this.lastCombatResult = null;
     }
 
     public GameEngine(Dungeon dungeon, Player player) {
-        this.dungeon = dungeon;
-        this.player = player;
-        this.enemies = new ArrayList<>();
-        this.combatSystem = new CombatSystem();
+        this(dungeon, player, new ArrayList<>());
     }
 
     public GameEngine(
@@ -32,10 +38,30 @@ public class GameEngine {
             Player player,
             List<Enemy> enemies
     ) {
+        this.random = new Random();
+
         this.dungeon = dungeon;
         this.player = player;
         this.enemies = new ArrayList<>(enemies);
         this.combatSystem = new CombatSystem();
+        this.gameState = GameState.PLAYING;
+        this.lastCombatResult = null;
+    }
+
+    public GameState getGameState() {
+        return gameState;
+    }
+
+    private void updateGameState() {
+
+        if (!player.isAlive()) {
+            gameState = GameState.DEFEAT;
+            return;
+        }
+
+        if (getAliveEnemyCount() == 0) {
+            gameState = GameState.VICTORY;
+        }
     }
 
     private Player createPlayer(DungeonGenerator generator) {
@@ -58,18 +84,19 @@ public class GameEngine {
 
         List<Room> rooms = generator.getRooms();
 
+        EnemyType[] types = EnemyType.values();
+
         for (int i = 1; i < rooms.size(); i++) {
 
             Room room = rooms.get(i);
 
+            EnemyType type = types[random.nextInt(types.length)];
+
             enemies.add(
                     new Enemy(
-                            "Gobelin",
+                            type,
                             room.getCenterX(),
-                            room.getCenterY(),
-                            30,
-                            8,
-                            2
+                            room.getCenterY()
                     )
             );
         }
@@ -103,7 +130,24 @@ public class GameEngine {
     }
 
     public void fightEnemy(Enemy enemy) {
-        combatSystem.fightTurn(player, enemy);
+
+        if (gameState != GameState.PLAYING) {
+            return;
+        }
+
+        lastCombatResult = combatSystem.fightTurn(player, enemy);
+
+        updateGameState();
+    }
+
+    public CombatResult getLastCombatResult() {
+        return lastCombatResult;
+    }
+
+    public CombatResult consumeLastCombatResult() {
+        CombatResult result = lastCombatResult;
+        lastCombatResult = null;
+        return result;
     }
 
     private Enemy findEnemyAt(int x, int y) {
@@ -123,7 +167,16 @@ public class GameEngine {
     }
 
     public int attackEnemy(Enemy enemy) {
-        return combatSystem.attack(player, enemy);
+
+        if (gameState != GameState.PLAYING) {
+            return 0;
+        }
+
+        int damage = combatSystem.attack(player, enemy);
+
+        updateGameState();
+
+        return damage;
     }
 
     public Player getPlayer() {
@@ -136,5 +189,19 @@ public class GameEngine {
 
     public List<Enemy> getEnemies() {
         return List.copyOf(enemies);
+    }
+
+    public int getAliveEnemyCount() {
+
+        int count = 0;
+
+        for (Enemy enemy : enemies) {
+
+            if (enemy.isAlive()) {
+                count++;
+            }
+        }
+
+        return count;
     }
 }

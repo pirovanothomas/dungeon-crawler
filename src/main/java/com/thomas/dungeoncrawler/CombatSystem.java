@@ -38,16 +38,37 @@ public class CombatSystem {
         return damage;
     }
 
-    public void fightTurn(Player player, Enemy enemy) {
+    public CombatResult fightTurn(Player player, Enemy enemy) {
 
         if (!player.isAlive() || !enemy.isAlive()) {
-            return;
+            return new CombatResult(
+                    enemy,
+                    0,
+                    0,
+                    !enemy.isAlive(),
+                    !player.isAlive()
+            );
         }
+
+        int enemyHealthBefore = enemy.getHealth();
+        int playerHealthBefore = player.getHealth();
 
         attack(player, enemy);
 
+        int playerDamage = enemyHealthBefore - enemy.getHealth();
+        int enemyDamage = 0;
+
         if (enemy.isAlive()) {
             attack(enemy, player);
+            enemyDamage = playerHealthBefore - player.getHealth();
         }
+
+        return new CombatResult(
+                enemy,
+                playerDamage,
+                enemyDamage,
+                !enemy.isAlive(),
+                !player.isAlive()
+        );
     }
 }

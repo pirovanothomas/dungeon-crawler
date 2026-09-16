@@ -101,4 +101,21 @@ class EnemyTest {
         assertEquals(6, enemy.getX());
         assertEquals(4, enemy.getY());
     }
+
+    @Test
+    void enemyCreatedFromTypeShouldUseTypeStatistics() {
+
+        Enemy enemy = new Enemy(
+                EnemyType.ORC,
+                5,
+                6
+        );
+
+        assertEquals(EnemyType.ORC, enemy.getType());
+        assertEquals("Orc", enemy.getName());
+        assertEquals(50, enemy.getMaxHealth());
+        assertEquals(50, enemy.getHealth());
+        assertEquals(12, enemy.getAttack());
+        assertEquals(4, enemy.getDefense());
+    }
 }

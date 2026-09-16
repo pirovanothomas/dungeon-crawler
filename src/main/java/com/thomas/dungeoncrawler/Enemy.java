@@ -13,7 +13,16 @@ public class Enemy {
     private final int attack;
     private final int defense;
 
-    public Enemy(String name, int x, int y, int maxHealth, int attack, int defense) {
+    private final EnemyType type;
+
+    public Enemy(
+            String name,
+            int x,
+            int y,
+            int maxHealth,
+            int attack,
+            int defense
+    ) {
         this.name = name;
         this.x = x;
         this.y = y;
@@ -23,6 +32,27 @@ public class Enemy {
 
         this.attack = attack;
         this.defense = defense;
+
+        this.type = null;
+    }
+
+    public Enemy(EnemyType type, int x, int y) {
+
+        this.name = type.getName();
+        this.type = type;
+
+        this.x = x;
+        this.y = y;
+
+        this.maxHealth = type.getMaxHealth();
+        this.health = type.getMaxHealth();
+
+        this.attack = type.getAttack();
+        this.defense = type.getDefense();
+    }
+
+    public EnemyType getType() {
+        return type;
     }
 
     public String getName() {
