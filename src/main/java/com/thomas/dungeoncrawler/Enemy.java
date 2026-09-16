@@ -1,6 +1,8 @@
 package com.thomas.dungeoncrawler;
 
-public class Player {
+public class Enemy {
+
+    private final String name;
 
     private int x;
     private int y;
@@ -11,11 +13,8 @@ public class Player {
     private final int attack;
     private final int defense;
 
-    public Player(int x, int y) {
-        this(x, y, 100, 10, 5);
-    }
-
-    public Player(int x, int y, int maxHealth, int attack, int defense) {
+    public Enemy(String name, int x, int y, int maxHealth, int attack, int defense) {
+        this.name = name;
         this.x = x;
         this.y = y;
 
@@ -24,6 +23,10 @@ public class Player {
 
         this.attack = attack;
         this.defense = defense;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public int getX() {
