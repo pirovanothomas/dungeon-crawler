@@ -7,13 +7,16 @@ public class Dungeon {
     private final Tile[][] tiles;
 
     public Dungeon(int width, int height) {
+        this(width, height, new DungeonGenerator());
+    }
+
+    public Dungeon(int width, int height, DungeonGenerator generator) {
         this.width = width;
         this.height = height;
         this.tiles = new Tile[height][width];
 
         initializeWalls();
 
-        DungeonGenerator generator = new DungeonGenerator();
         generator.generate(this);
     }
 
@@ -84,5 +87,14 @@ public class Dungeon {
                 tiles[y][x] = new Tile(TileType.FLOOR);
             }
         }
+    }
+
+    public void setTile(int x, int y, TileType type) {
+
+        if (!isInside(x, y)) {
+            return;
+        }
+
+        tiles[y][x] = new Tile(type);
     }
 }

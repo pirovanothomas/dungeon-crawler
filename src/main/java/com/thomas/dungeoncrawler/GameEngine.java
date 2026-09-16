@@ -10,6 +10,11 @@ public class GameEngine {
         this.player = new Player(3, 3);
     }
 
+    public GameEngine(Dungeon dungeon, Player player) {
+        this.dungeon = dungeon;
+        this.player = player;
+    }
+
     public void movePlayer(int deltaX, int deltaY) {
 
         int newX = player.getX() + deltaX;

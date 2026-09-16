@@ -29,4 +29,20 @@ public class Room {
     public int getHeight() {
         return height;
     }
+
+    public boolean intersects(Room other) {
+
+        return x < other.getX() + other.getWidth()
+                && x + width > other.getX()
+                && y < other.getY() + other.getHeight()
+                && y + height > other.getY();
+    }
+
+    public int getCenterX() {
+        return x + width / 2;
+    }
+
+    public int getCenterY() {
+        return y + height / 2;
+    }
 }

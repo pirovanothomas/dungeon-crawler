@@ -9,20 +9,25 @@ class GameEngineTest {
     @Test
     void playerShouldNotMoveThroughWall() {
 
-        GameEngine engine = new GameEngine();
+        Dungeon dungeon = new Dungeon(10, 10);
 
-        // Le joueur commence en (3, 3).
-        // On monte en (3, 2), où aucun couloir horizontal
-        // ne permet de traverser le mur entre les salles.
-        engine.movePlayer(0, -1);
-
-        // On tente ensuite de traverser le mur.
-        for (int i = 0; i < 20; i++) {
-            engine.movePlayer(1, 0);
+        // On crée une zone entièrement accessible.
+        for (int y = 0; y < 10; y++) {
+            for (int x = 0; x < 10; x++) {
+                dungeon.setTile(x, y, TileType.FLOOR);
+            }
         }
 
-        // La première salle s'arrête en x = 7.
-        assertEquals(7, engine.getPlayer().getX());
-        assertEquals(2, engine.getPlayer().getY());
+        // On place un mur devant le joueur.
+        dungeon.setTile(4, 5, TileType.WALL);
+
+        Player player = new Player(3, 5);
+
+        GameEngine engine = new GameEngine(dungeon, player);
+
+        engine.movePlayer(1, 0);
+
+        assertEquals(3, engine.getPlayer().getX());
+        assertEquals(5, engine.getPlayer().getY());
     }
 }

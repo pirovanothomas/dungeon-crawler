@@ -30,29 +30,12 @@ class DungeonTest {
     }
 
     @Test
-    void insideShouldBeFloor() {
-        Dungeon dungeon = new Dungeon(10, 5);
-
-        assertEquals(
-                TileType.FLOOR,
-                dungeon.getTile(5, 2).getType()
-        );
-    }
-
-    @Test
     void positionShouldBeInsideDungeon() {
         Dungeon dungeon = new Dungeon(10, 5);
 
         assertTrue(dungeon.isInside(5, 2));
         assertFalse(dungeon.isInside(-1, 2));
         assertFalse(dungeon.isInside(10, 2));
-    }
-
-    @Test
-    void interiorWallShouldNotBeWalkable() {
-        Dungeon dungeon = new Dungeon(20, 8);
-
-        assertFalse(dungeon.getTile(9, 2).isWalkable());
     }
 
     @Test
@@ -100,5 +83,29 @@ class DungeonTest {
         assertTrue(dungeon.getTile(5, 3).isWalkable());
         assertTrue(dungeon.getTile(5, 5).isWalkable());
         assertTrue(dungeon.getTile(5, 8).isWalkable());
+    }
+
+    @Test
+    void wallShouldNotBeWalkable() {
+
+        Dungeon dungeon = new Dungeon(20, 8);
+
+        dungeon.setTile(9, 2, TileType.WALL);
+
+        assertFalse(dungeon.getTile(9, 2).isWalkable());
+    }
+
+    @Test
+    void carvedRoomShouldContainFloor() {
+
+        Dungeon dungeon = new Dungeon(10, 5);
+
+        Room room = new Room(2, 1, 5, 3);
+
+        dungeon.carveRoom(room);
+
+        assertEquals(TileType.FLOOR, dungeon.getTile(2, 1).getType());
+        assertEquals(TileType.FLOOR, dungeon.getTile(4, 2).getType());
+        assertEquals(TileType.FLOOR, dungeon.getTile(6, 3).getType());
     }
 }
