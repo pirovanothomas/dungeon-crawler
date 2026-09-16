@@ -54,4 +54,51 @@ class DungeonTest {
 
         assertFalse(dungeon.getTile(9, 2).isWalkable());
     }
+
+    @Test
+    void roomShouldBeCarvedIntoDungeon() {
+
+        Dungeon dungeon = new Dungeon(20, 10);
+        Room room = new Room(2, 2, 5, 4);
+
+        dungeon.carveRoom(room);
+
+        assertTrue(dungeon.getTile(2, 2).isWalkable());
+        assertTrue(dungeon.getTile(4, 3).isWalkable());
+    }
+
+//    @Test
+//    void tilesOutsideRoomShouldRemainUnchanged() {
+//
+//        Dungeon dungeon = new Dungeon(20, 10);
+//        Room room = new Room(2, 2, 5, 4);
+//
+//        dungeon.carveRoom(room);
+//
+//        assertFalse(dungeon.getTile(10, 5).getType() == TileType.WALL);
+//    }
+
+    @Test
+    void horizontalCorridorShouldBeWalkable() {
+
+        Dungeon dungeon = new Dungeon(20, 10);
+
+        dungeon.carveHorizontalCorridor(3, 8, 5);
+
+        assertTrue(dungeon.getTile(3, 5).isWalkable());
+        assertTrue(dungeon.getTile(5, 5).isWalkable());
+        assertTrue(dungeon.getTile(8, 5).isWalkable());
+    }
+
+    @Test
+    void verticalCorridorShouldBeWalkable() {
+
+        Dungeon dungeon = new Dungeon(20, 10);
+
+        dungeon.carveVerticalCorridor(3, 8, 5);
+
+        assertTrue(dungeon.getTile(5, 3).isWalkable());
+        assertTrue(dungeon.getTile(5, 5).isWalkable());
+        assertTrue(dungeon.getTile(5, 8).isWalkable());
+    }
 }

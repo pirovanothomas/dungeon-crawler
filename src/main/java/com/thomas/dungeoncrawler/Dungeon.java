@@ -11,46 +11,19 @@ public class Dungeon {
         this.height = height;
         this.tiles = new Tile[height][width];
 
-        generateBasicDungeon();
+        initializeWalls();
+
+        DungeonGenerator generator = new DungeonGenerator();
+        generator.generate(this);
     }
 
-    private void generateBasicDungeon() {
+    private void initializeWalls() {
 
         for (int y = 0; y < height; y++) {
+
             for (int x = 0; x < width; x++) {
 
-                boolean isBorder =
-                        x == 0 ||
-                                x == width - 1 ||
-                                y == 0 ||
-                                y == height - 1;
-
-                if (isBorder) {
-                    tiles[y][x] = new Tile(TileType.WALL);
-                } else {
-                    tiles[y][x] = new Tile(TileType.FLOOR);
-                }
-            }
-        }
-
-        // Mur vertical
-        if (width > 9 && height > 5) {
-            for (int y = 1; y < 5; y++) {
-                tiles[y][9] = new Tile(TileType.WALL);
-            }
-        }
-
-        // Mur horizontal
-        if (width > 14 && height > 4) {
-            for (int x = 9; x < 15; x++) {
-                tiles[4][x] = new Tile(TileType.WALL);
-            }
-        }
-
-        // Petit mur horizontal
-        if (width > 8 && height > 6) {
-            for (int x = 4; x < 9; x++) {
-                tiles[6][x] = new Tile(TileType.WALL);
+                tiles[y][x] = new Tile(TileType.WALL);
             }
         }
     }
@@ -72,5 +45,44 @@ public class Dungeon {
                 x < width &&
                 y >= 0 &&
                 y < height;
+    }
+
+    public void carveRoom(Room room) {
+
+        for (int y = room.getY(); y < room.getY() + room.getHeight(); y++) {
+
+            for (int x = room.getX(); x < room.getX() + room.getWidth(); x++) {
+
+                if (isInside(x, y)) {
+                    tiles[y][x] = new Tile(TileType.FLOOR);
+                }
+            }
+        }
+    }
+
+    public void carveHorizontalCorridor(int x1, int x2, int y) {
+
+        int start = Math.min(x1, x2);
+        int end = Math.max(x1, x2);
+
+        for (int x = start; x <= end; x++) {
+
+            if (isInside(x, y)) {
+                tiles[y][x] = new Tile(TileType.FLOOR);
+            }
+        }
+    }
+
+    public void carveVerticalCorridor(int y1, int y2, int x) {
+
+        int start = Math.min(y1, y2);
+        int end = Math.max(y1, y2);
+
+        for (int y = start; y <= end; y++) {
+
+            if (isInside(x, y)) {
+                tiles[y][x] = new Tile(TileType.FLOOR);
+            }
+        }
     }
 }

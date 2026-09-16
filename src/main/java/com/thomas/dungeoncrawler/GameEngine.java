@@ -7,7 +7,7 @@ public class GameEngine {
 
     public GameEngine() {
         this.dungeon = new Dungeon(20, 8);
-        this.player = new Player(1, 1);
+        this.player = new Player(3, 3);
     }
 
     public void movePlayer(int deltaX, int deltaY) {
