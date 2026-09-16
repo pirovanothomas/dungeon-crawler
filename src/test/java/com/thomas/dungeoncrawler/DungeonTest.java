@@ -47,4 +47,11 @@ class DungeonTest {
         assertFalse(dungeon.isInside(-1, 2));
         assertFalse(dungeon.isInside(10, 2));
     }
+
+    @Test
+    void interiorWallShouldNotBeWalkable() {
+        Dungeon dungeon = new Dungeon(20, 8);
+
+        assertFalse(dungeon.getTile(9, 2).isWalkable());
+    }
 }

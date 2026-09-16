@@ -32,6 +32,27 @@ public class Dungeon {
                 }
             }
         }
+
+        // Mur vertical
+        if (width > 9 && height > 5) {
+            for (int y = 1; y < 5; y++) {
+                tiles[y][9] = new Tile(TileType.WALL);
+            }
+        }
+
+        // Mur horizontal
+        if (width > 14 && height > 4) {
+            for (int x = 9; x < 15; x++) {
+                tiles[4][x] = new Tile(TileType.WALL);
+            }
+        }
+
+        // Petit mur horizontal
+        if (width > 8 && height > 6) {
+            for (int x = 4; x < 9; x++) {
+                tiles[6][x] = new Tile(TileType.WALL);
+            }
+        }
     }
 
     public Tile getTile(int x, int y) {
